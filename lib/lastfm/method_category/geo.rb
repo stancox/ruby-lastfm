@@ -10,7 +10,8 @@ class Lastfm
           [:page, nil]
         ]
       ) do |response|
-        response.xml['events']['event']
+        #response.xml['events']['event']
+        response.xml['events']
       end
     end
   end
