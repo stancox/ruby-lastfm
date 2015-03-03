@@ -34,7 +34,18 @@ class Lastfm
         response.xml['topalbums']['album']
 
       end
-      
+
+      regular_method(
+        :get_similar,
+        :required => [:tag],
+        :optional => [
+          [:limit, nil],
+          [:page, nil]
+        ]
+      ) do |response|
+        response.xml['similartags']
+      end
+
       regular_method(
         :search,
         :required => [:tag],
