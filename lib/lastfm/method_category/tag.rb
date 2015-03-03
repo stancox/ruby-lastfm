@@ -54,7 +54,7 @@ class Lastfm
           [:page, nil]
         ]
       ) do |response|
-        response.xml['results']['tagmatches']['tag']
+        response.xml['results'] 
       end
 
       regular_method(
