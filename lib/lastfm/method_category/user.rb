@@ -33,7 +33,7 @@ class Lastfm
           [:page, nil]
         ]
       ) do |response|
-        response.xml['lovedtracks']['track']
+        response.xml['lovedtracks']['track'] = Util.force_array(response.xml['lovedtracks']['track'])
       end
 
       regular_method(
@@ -82,7 +82,7 @@ class Lastfm
         Lastfm::Util::force_array(result)
       end
 
-      regular_method(
+      method_with_authentication(
         :get_recent_tracks,
         :required => [:user],
         :optional => [

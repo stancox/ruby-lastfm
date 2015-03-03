@@ -177,6 +177,36 @@ describe '#user' do
       tracks[1]['name'].should == 'Working Titles'
       tracks[1]['artist']['name'].should == 'Damien Jurado'
     end
+
+    it 'should always return an array of tracks' do
+      @lastfm.should_receive(:request).with('user.getLovedTracks', {
+        :user => 'test',
+        :period => nil,
+        :limit => nil,
+        :page => nil
+      }).and_return(make_response('user_get_loved_tracks_single_track'))
+
+      tracks = @lastfm.user.get_loved_tracks(:user => 'test')
+
+      tracks.size.should == 1
+
+      tracks[0]['rank'].should == nil
+      tracks[0]['name'].should == 'I Spy'
+      tracks[0]['artist']['name'].should == 'Mikhael Paskalev'
+    end
+
+    it 'should return an empty array when user has 0 loved tracks' do
+      @lastfm.should_receive(:request).with('user.getLovedTracks', {
+        :user => 'test',
+        :period => nil,
+        :limit => nil,
+        :page => nil
+      }).and_return(make_response('user_get_loved_tracks_no_tracks'))
+
+      tracks = @lastfm.user.get_loved_tracks(:user => 'test')
+
+      tracks.size.should == 0
+    end
   end
 
   describe '#get_friends' do
@@ -227,7 +257,7 @@ describe '#user' do
         :limit => nil,
         :to => nil,
         :from => nil
-      }).and_return(make_response('user_get_recent_tracks'))
+      }, :get, true, true).and_return(make_response('user_get_recent_tracks'))
       tracks = @lastfm.user.get_recent_tracks(:user => 'test')
       tracks[1]['artist']['content'].should == 'Kylie Minogue'
       tracks.size.should == 2
@@ -240,8 +270,8 @@ describe '#user' do
         :limit => nil,
         :to => nil,
         :from => nil
-      }).and_return(make_response('user_get_recent_tracks_malformed'))
-      tracks = @lastfm.user.get_recent_tracks(:user => 'test')
+      }, :get, true, true).and_return(make_response('user_get_recent_tracks_malformed'))
+      @lastfm.user.get_recent_tracks(:user => 'test')
     end
   end
 
